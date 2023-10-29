@@ -1,0 +1,46 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - 5173:5173
+    networks:
+      - client
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=foobarbaz
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - client
+      - server
+
+  db:
+    image: postgres:alpine3.18
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=foobarbaz
+    networks:
+      - server
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
+
+networks:
+  client:
+  server:
