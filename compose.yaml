@@ -12,7 +12,6 @@ services:
   backend:
     build:
       context: ./backend
-    command: python manage.py runserver 0.0.0.0:8000
     environment:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
